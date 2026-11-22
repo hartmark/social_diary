@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The hunt card (Your Diary's plates, JRN-26): a quest's drops that took
 -- bad luck, as option A of .claude/ui-proposal/hunt-card-proposal.md,
 -- "Counted". A paper strip (UI/PaperStrip.lua) taped in the plate's margin

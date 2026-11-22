@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Instance visits (INS-1), as prd.md's data model has them.
 --
 -- db.instances[visitId] = { id, me, instanceID, name, instanceType ("party"

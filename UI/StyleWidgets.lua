@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The small pieces drawn on the pages (Style, from UI/StyleTokens.lua):
 -- rules, links, index tabs, tags, writing lines, boxes to tick, number
 -- fields, portraits, a dungeon's medallion and its boss marks.

@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The "Remember this" picker (DIA-3, DIA-4).
 --
 -- Opened by the slash command. It lists everyone the client can still name,

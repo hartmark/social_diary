@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The parcel at login (PRV-4): the diary has just arrived, and opening it
 -- is the first moment of role-play. A few seconds after login, until the
 -- book's introduction has been read -- the frontispiece

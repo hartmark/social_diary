@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- A paper strip taped into the diary (JRN-22): a person's margin note
 -- beside a map plate (UI/JournalJourney.lua). A narrow slip of lighter
 -- stock than the page, written on in the diary's hand (their name,

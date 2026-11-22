@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The map sheet's heat as ink blots (UI/HeatMap.lua): the arithmetic alone.
 --
 -- Where you saw someone is a handful of cells; drawn one disc a cell, a

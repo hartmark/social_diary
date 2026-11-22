@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The frontispiece: the book's first leaf, in front of the front matter
 -- (UI/JournalFront.lua), without a ribbon of its own. It shows the one idea
 -- the rest of the diary depends on: strangers are pencilled in by

@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The profile's timeline (JNL-2, TLN-3 to TLN-7): ns.Timeline's items laid
 -- out as page lines, and the rows that draw them -- rubricated day headings,
 -- episodes with their details line, dungeon runs on a plate, and the ink

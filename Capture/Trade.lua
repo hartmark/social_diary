@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Trade capture (INT-1, Must; verified in Session 1 as T-E8).
 --
 -- The first interaction source, and the best one to build first: it is

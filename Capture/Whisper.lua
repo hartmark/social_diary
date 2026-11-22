@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Whisper capture (INT-1, Must).
 --
 -- Whispers are the interaction most likely to hold the reason you wanted to

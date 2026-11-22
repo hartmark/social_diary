@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Reunion toasts (REU-1 to REU-3).
 --
 -- When a diary entry joins the user's group, a toast says who, with their

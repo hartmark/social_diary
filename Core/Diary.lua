@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The diary itself (DIA-1 to DIA-7).
 --
 -- DIA-1 is the rule the whole module exists to enforce: a character enters the

@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Your Diary's fights in more depth (JRN-25, JRN-26): the close calls,
 -- and how many kills a quest's drops took. Both go on the logged-in
 -- character's route (Core/Journey.lua), while it is being kept.

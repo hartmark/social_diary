@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The character store (prd.md section 7, DIA-5, DIA-9).
 --
 -- One record per player the addon has ever observed, keyed by GUID. The

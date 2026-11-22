@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The journal's map: where you saw someone, as heat over the map art, on a
 -- loose sheet of paper lying across both pages of the open book.
 --

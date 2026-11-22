@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The journal's query layer (JNL-1, JNL-2).
 --
 -- Everything the People list sorts and filters on -- times met, last met,

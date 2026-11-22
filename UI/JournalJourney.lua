@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Your Diary's start page (JRN-11, JRN-13, JRN-15, JRN-16, JRN-21 to
 -- JRN-23): the logged-in character's own road, the journal's first
 -- section, in front of People.

@@ -6,7 +6,7 @@ name: Tests
 
 on:
   push:
-    branches: [main]
+    branches: [main, wotlk-3.3.5]
   pull_request:
 
 jobs:
@@ -20,3 +20,9 @@ jobs:
 
       - name: Run tests
         run: luajit tests/run.lua
+
+      - name: Test original 3.3.5 API compatibility
+        run: luajit tests/legacy.lua
+
+      - name: Test original 3.3.5 rendering adapters
+        run: luajit tests/legacy_ui.lua

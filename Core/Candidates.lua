@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- "Remember this" candidates (DIA-3).
 --
 -- The picker's job is to answer "who did I just mean?" without the user having

@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The events that drive together sessions (SES-2 to SES-4).
 --
 -- Core/Sessions.lua holds the model and never touches a unit token; this file

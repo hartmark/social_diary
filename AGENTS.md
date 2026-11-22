@@ -5,12 +5,33 @@ groups, trades, whispers, fights, deaths, sightings, reunions — and presents t
 plus your own journey (levels, firsts, zones, sessions), as a hand-written,
 paper-styled journal. Open with `/sd`.
 
-## Target game: WoW Forever
+## Target game: original Wrath of the Lich King 3.3.5a
 
-This is **WoW Forever** (currently in beta): a classic-era game (classic content,
-rules and world) running on the **retail addon API**. Use retail API names and
-patterns (`C_*` namespaces, Settings API, AddonCompartment, etc.), but expect
-classic gameplay. Interface version is in `social_diary.toc`.
+This fork's `wotlk-3.3.5` branch targets the original build 12340 client,
+Interface 30300. It starts from upstream Social Diary v1.5.0, which targets
+WoW Forever's retail API. Keep the existing journal and saved-data model;
+adapt old-client APIs through the addon's private environment in
+`Core/Legacy.lua` and rendering wrappers in `Core/LegacyUI.lua`. Do not
+replace global Blizzard APIs or change other addons' frames/metatables.
+
+Every addon Lua chunk except the adapters enters `SocialDiaryLegacyEnv`
+when present. TOC paths must use Windows backslashes: the original client's
+loader rejects forward slashes. `tests/wowmock.lua` normalizes those paths
+for offline loading. Development commands are loaded explicitly by the mock,
+not by the shipped TOC.
+
+Run all three checks before pushing:
+
+```sh
+luajit tests/run.lua
+luajit tests/legacy.lua
+luajit tests/legacy_ui.lua
+```
+
+The first suite models the upstream API; the other checks exercise the old
+client adapter and rendering compatibility. Passing mocks does not prove
+complete in-game compatibility. The journal opens in the user's client;
+other capture and rendering paths still need in-game validation.
 
 ## Where to find what
 

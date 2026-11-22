@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Your Diary's map plates (JRN-14, JRN-21): the ink trail's arithmetic. The road
 -- and its stops are one trail of ink, as a pen would leave it following
 -- you across the map, built from the only two things the sheet draws them

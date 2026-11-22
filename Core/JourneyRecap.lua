@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Your Diary's recap (JRN-10 to JRN-13, JRN-15): the route crossed with
 -- the diary, as entries a page can print.
 --

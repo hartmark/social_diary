@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The Recently nearby page (JNL-3): the journal's purple ribbon.
 --
 -- For scanning who was around and picking people to add, not for reading

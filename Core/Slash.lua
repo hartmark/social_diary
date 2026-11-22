@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Slash commands: /sd and /socialdiary.
 --
 -- One dispatcher, and one ordered list per command level that both it and

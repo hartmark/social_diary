@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- A zone's map art as the player's own world map shows it, for the sheets
 -- and plates that print it (UI/HeatMap.lua, UI/JourneyPlate.lua).
 --

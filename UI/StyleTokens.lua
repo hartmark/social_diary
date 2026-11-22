@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The journal's look: parchment, ink and the game's own fonts.
 --
 -- Built from textures and font objects the client already ships, and from

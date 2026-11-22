@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- World PvP: who you killed, and who killed you (prd.md, "Killed them, or
 -- killed by them").
 --

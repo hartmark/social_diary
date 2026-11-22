@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The open person's page (JNL-2), on the right: portrait, who they are and
 -- tags, then a list that scrolls: your note and the story so far, then the
 -- timeline. Its tabs lay a

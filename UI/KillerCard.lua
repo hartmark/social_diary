@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The killer card (Your Diary's plates, JRN-21): what killed you on a plate,
 -- as option A of .claude/ui-proposal/killer-models-proposal.md, "Cut in
 -- ink". A paper strip (UI/PaperStrip.lua) taped in the plate's margin, last

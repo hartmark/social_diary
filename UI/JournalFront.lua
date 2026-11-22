@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The book's front matter (PRV-4, with PRV-1 and PRV-7 said out loud): the
 -- second leaf, after the frontispiece (UI/JournalFrontispiece.lua), in
 -- front of Your Diary, without a ribbon of its own.

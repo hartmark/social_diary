@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Choosing a key for one of the addon's bindings (Bindings.xml), on the
 -- page: the key drawn as a keycap, a link to change it, and the page
 -- listening for the next key pressed. The empty People page binds Remember

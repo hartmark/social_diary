@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Together sessions (SES-1 to SES-5).
 --
 -- A session is continuous time with one or more diary entries. There is at

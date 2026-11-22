@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- A side tab on the Social window (O) that opens the journal.
 --
 -- The window's own tabs are unnamed 55x55 buttons stacked down its right
@@ -109,8 +110,9 @@ local function Build(window)
 end
 
 local function TryBuild()
-    if tab or not SocialUIFrame then return end
-    Build(SocialUIFrame)
+    local window = SocialUIFrame or FriendsFrame
+    if tab or not window then return end
+    Build(window)
 end
 
 ns.On("PLAYER_LOGIN", TryBuild)

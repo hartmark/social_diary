@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Shared frame construction.
 --
 -- Hand-rolled rather than templated, for the reason REU-3 gives about toasts:

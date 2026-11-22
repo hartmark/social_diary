@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The first found card (Your Diary's plates, JRN-24): a first bag,
 -- shoulders, green, blue or epic, shown as the thing itself. A paper strip
 -- (UI/PaperStrip.lua) taped in the plate's margin with a pencil leader to

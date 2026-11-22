@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The interaction buffer (INT-1 to INT-5).
 --
 -- Every explicit exchange with anyone -- grouped, whispered, traded -- lands

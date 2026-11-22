@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Where you see the people in your diary, as a coarse heat map per map.
 --
 -- Each diary entry's character record carries heat[mapID][cell] = count on a

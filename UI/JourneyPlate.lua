@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Your Diary's plates (JRN-14, JRN-21, JRN-22): one window of a zone's map,
 -- printed on a card glued into the diary's right page (UI/JournalJourney.lua
 -- lays them out). A close-up shows the art at its own size, one screen
@@ -477,11 +478,12 @@ local function New(parent, slot)
     -- anchored to the card's middle, so they grow about it). `over` lies
     -- above both: the mat, the neat line, the lifted corner's shade and the
     -- photo corners, which do not zoom.
-    local clip = CreateFrame("Frame", nil, S)
+    local clip = CreateFrame(SocialDiaryLegacyEnv and "ScrollFrame" or "Frame", nil, S)
     clip:SetPoint("CENTER", S, "CENTER")
-    clip:SetClipsChildren(true)
+    if clip.SetClipsChildren then clip:SetClipsChildren(true) end
     local content = CreateFrame("Frame", nil, clip)
     content:SetAllPoints(clip)
+    if SocialDiaryLegacyEnv then clip:SetScrollChild(content) end
     -- What the picture is placed about: the card's middle, shifted to pan
     -- (FULLZOOM). Unscaled, in the clip.
     local pivot = CreateFrame("Frame", nil, clip)

@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The journal's art (Style, from UI/StyleTokens.lua): each key a list of
 -- candidate files, the first the client has winning, and flat colour when
 -- none does. Also the instance and character pictures, which fall back the

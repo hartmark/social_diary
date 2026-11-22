@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Your Diary's words (JRN-11 to JRN-14, JRN-21 to JRN-26): what each recap
 -- entry says, the plates' captions and margin notes, the first sightings in
 -- hindsight, the zone lines, and the plates' tooltips.

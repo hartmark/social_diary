@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Grouping capture (INT-1 "grouping", Must): who is in the group now.
 --
 -- This file reads the unit tokens; Core/Roster.lua diffs them against the

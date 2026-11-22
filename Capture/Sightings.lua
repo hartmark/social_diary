@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Sighting capture (SIG-1, SIG-2, SIG-5, SIG-6, SIG-8).
 --
 -- The client has no "who is near me" call. What it has is every unit token

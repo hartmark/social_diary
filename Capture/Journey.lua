@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Your Diary's capture (JRN-1, JRN-2, JRN-6 to JRN-9, JRN-17): where the
 -- client's signals are read and handed to Core/Journey.lua, which never
 -- touches a unit token.

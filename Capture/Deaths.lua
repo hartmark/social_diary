@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Deaths in a together session, and what killed them (SES-4).
 --
 -- PLAYER_DEAD and UNIT_DIED say who died and nothing more: the combat log

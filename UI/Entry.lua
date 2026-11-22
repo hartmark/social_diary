@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The add / edit page (DIA-4, DIA-6, DIA-7).
 --
 -- DIA-4 caps adding at two actions: "Remember this", then Done. Until Done

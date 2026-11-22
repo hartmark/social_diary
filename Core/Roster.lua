@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The group as last seen (INT-1 "grouping", SES-1, SES-3).
 --
 -- Capture/Group.lua reads the unit tokens and hands over who is in the group

@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- SavedVariables bootstrap.
 --
 -- DAT-1: each character keeps a diary of its own, unless the user shares one

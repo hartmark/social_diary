@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Notes the user writes into the diary (DIA-11).
 --
 -- The entry's own `note` (DIA-6) is one standing line about who someone is.
@@ -125,6 +126,7 @@ end
 -- Returns the note, or nil when there was nothing to write or nobody to
 -- write it about.
 function Notes.Add(guids, text, opts)
+    if ns.IsSecret(guids) then return nil end
     opts = opts or {}
     text = Clean(text)
     if not text then return nil end

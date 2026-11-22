@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The lucky card (Your Diary's plates, JRN-27): a quest's drops that came
 -- with good luck, as .claude/ui-proposal/lucky-card-proposal.md, "Struck
 -- down" (decided 13 Oct). The bad-luck hunt card's slip (UI/HuntCard.lua)

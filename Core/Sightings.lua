@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The sighting store (prd.md section 7; SIG-3, SIG-4, SIG-7).
 --
 -- "I saw this character here." This file keeps the rows; Capture/Sightings.lua

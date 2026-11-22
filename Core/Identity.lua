@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Identity: GUIDs and names (NAM-1).
 --
 -- No single API in this build returns a usable full name, and the ones that
@@ -29,7 +30,7 @@ local addonName, ns = ...
 -- the GUID itself, not a content signal.
 function ns.SafeGUID(guid)
     local plain = ns.Plain(guid)
-    if type(plain) ~= "string" or plain:sub(1, 7) ~= "Player-" then return nil end
+    if type(plain) ~= "string" or plain:sub(1, 7) ~= "Player-" and not (SocialDiaryLegacyEnv and plain:match("^0x0000%x%x%x%x%x%x%x%x%x%x%x%x$")) then return nil end
     return plain
 end
 
@@ -38,6 +39,7 @@ end
 function ns.NpcID(guid)
     guid = ns.Plain(guid)
     if type(guid) ~= "string" then return nil end
+    if SocialDiaryLegacyEnv and guid:match("^0xF1[35]0%x+$") then return tonumber(guid:sub(7, 12), 16) end
     return tonumber(guid:match("^Creature%-%d+%-%d+%-%d+%-%d+%-(%d+)"))
         or tonumber(guid:match("^Vehicle%-%d+%-%d+%-%d+%-%d+%-(%d+)"))
 end

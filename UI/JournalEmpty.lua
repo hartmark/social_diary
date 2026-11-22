@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- An empty diary's People page: how someone gets in, and what their page
 -- will be once they are.
 --

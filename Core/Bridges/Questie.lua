@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Questie and its database, when the user runs them (.claude/addon-
 -- integrations.md, EXT-1 to EXT-3). The only file that knows their names,
 -- globals and shapes: everything else asks the few functions below, which

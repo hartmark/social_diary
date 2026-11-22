@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Quest chain finales (.claude/addon-integrations.md, Q4; JRN-28): the
 -- chains the user chose, every one of seven quests or more in QuestieDB
 -- 1.0.5 (Forever), approved 12 Oct 2026 from .claude/questie/

@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Where the user is (prd.md section 7; SIG-3, INT-1, SES-4).
 --
 -- The diary stores the *user's own* position, never the other player's. Two

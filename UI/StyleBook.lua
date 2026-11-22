@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The book itself (Style, from UI/StyleTokens.lua): the open pages with
 -- the stack beneath, paper grain, the gutter, the ribbons, the leather
 -- cover with its brass corners, and the loose sheet the entry editor sits

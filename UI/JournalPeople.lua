@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The journal's People list (JNL-1), on the left page: the search box, the
 -- sort and filter menus, and the list itself, grouped under headings that
 -- follow the sort.

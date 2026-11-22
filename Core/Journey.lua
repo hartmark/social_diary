@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Your Diary: the logged-in character's own road through the world (prd.md
 -- 8.11, JRN-1 to JRN-20).
 --

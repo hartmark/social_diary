@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- A loose sheet of paper lying across the open book: the map (UI/HeatMap.lua)
 -- and a note being written (UI/NoteSheet.lua). This is the paper; what is
 -- on it is the caller's, placed, cut and lit through the toolkit this hands

@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The journal window (JNL-1, JNL-2, JNL-4, JNL-6).
 --
 -- An open book, with no window frame: a leather cover round two pages. The

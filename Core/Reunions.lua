@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- When a reunion toast is due (REU-1, REU-5): the settings and the
 -- per-person cooldown. UI/Reunion.lua shows the toast; this file decides
 -- whether there should be one, so the rule is testable without a frame.

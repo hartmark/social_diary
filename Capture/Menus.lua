@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Right-click entry points (DIA-2) and their GUID resolution (DIA-2a).
 --
 -- Session 1's awkward finding: neither MENU_UNIT_PLAYER nor MENU_UNIT_FRIEND

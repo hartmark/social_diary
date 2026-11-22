@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Unit tooltip lines for diary entries (REU-4), and one line for everyone
 -- else the sightings know (REU-6).
 --
@@ -93,4 +94,9 @@ ns.UI.OnUnitTooltip = OnUnitTooltip  -- for the smoke test
 if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall
     and Enum and Enum.TooltipDataType then
     TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, OnUnitTooltip)
+elseif GameTooltip and GameTooltip.HookScript then
+    GameTooltip:HookScript("OnTooltipSetUnit", function(tooltip)
+        local _, unit = tooltip:GetUnit()
+        if unit then OnUnitTooltip(tooltip, { guid = UnitGUID(unit) }) end
+    end)
 end

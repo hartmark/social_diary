@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- "Link others" for a note (DIA-11): a small card laid over the note's sheet
 -- (UI/NoteSheet.lua), on the same paper (UI/LooseSheet.lua).
 --

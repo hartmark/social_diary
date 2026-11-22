@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Central event dispatcher.
 --
 -- One frame for the whole addon. Registration is tracked per event so that
@@ -42,7 +43,17 @@ function ns.On(event, handler)
     if not list then
         list = { live = 0 }
         handlers[event] = list
-        if not IsMessage(event) then frame:RegisterEvent(event) end
+        if not IsMessage(event) then
+            if SocialDiaryLegacyEnv then
+                if event == "GROUP_ROSTER_UPDATE" then
+                    frame:RegisterEvent("PARTY_MEMBERS_CHANGED"); frame:RegisterEvent("RAID_ROSTER_UPDATE")
+                elseif event == "BAG_UPDATE_DELAYED" then frame:RegisterEvent("BAG_UPDATE")
+                elseif event ~= "QUEST_TURNED_IN" and event ~= "QUEST_REMOVED" and event ~= "UNIT_DIED"
+                    and event ~= "PARTY_KILL" and event ~= "NAME_PLATE_UNIT_ADDED" then
+                    frame:RegisterEvent(event)
+                end
+            else frame:RegisterEvent(event) end
+        end
     end
 
     -- Sightings switch on and off at every city gate, so a tombstone is
@@ -187,7 +198,31 @@ local function Dispatch(event, ...)
     end
 end
 
-frame:SetScript("OnEvent", function(_, event, ...) Dispatch(event, ...) end)
+frame:SetScript("OnEvent", function(_, event, ...)
+    if SocialDiaryLegacyEnv then
+        if event == "PARTY_MEMBERS_CHANGED" or event == "RAID_ROSTER_UPDATE" then
+            return Dispatch("GROUP_ROSTER_UPDATE", ...)
+        elseif event == "BAG_UPDATE" then return Dispatch("BAG_UPDATE_DELAYED", ...)
+        elseif event == "PLAYER_ENTERING_WORLD" then return Dispatch(event, true, false)
+        elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
+            local _, kind, source, _, _, dest = ...
+            if kind == "PARTY_KILL" then return Dispatch(kind, source, dest)
+            elseif kind == "UNIT_DIED" then return Dispatch(kind, dest) end
+            return
+        elseif event == "UI_INFO_MESSAGE" then return Dispatch(event, 0, ...) end
+    end
+    Dispatch(event, ...)
+end)
+if SocialDiaryLegacyEnv then
+    frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    local questID
+    local questFrame = CreateFrame("Frame")
+    questFrame:RegisterEvent("QUEST_COMPLETE")
+    questFrame:SetScript("OnEvent", function() questID = GetQuestID() end)
+    hooksecurefunc("GetQuestReward", function()
+        if questID and questID > 0 then Dispatch("QUEST_TURNED_IN", questID); questID = nil end
+    end)
+end
 
 -- One of the SD_* messages above, to every handler On registered for it, in
 -- registration order. A client event's name is refused: firing one by hand

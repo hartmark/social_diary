@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- A note for the timeline (DIA-11), written on a loose sheet laid across the
 -- book like the map (UI/LooseSheet.lua), from the profile's "Add a note"
 -- tab or a note clicked on the timeline. The Remember this keybind lays the

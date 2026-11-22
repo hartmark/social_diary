@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Settings (PRV-2, PRV-3, DAT-3): the journal's grey ribbon.
 --
 -- A page of the book like the others, in two panes: the left page lists the
@@ -1106,16 +1107,16 @@ end
 --------------------------------------------------------------------------
 
 local function CloseBlizzardSettings()
-    if SettingsPanel and SettingsPanel:IsShown() then
-        if HideUIPanel then HideUIPanel(SettingsPanel) else SettingsPanel:Hide() end
+    local settingsPanel = SettingsPanel or InterfaceOptionsFrame
+    if settingsPanel and settingsPanel:IsShown() then
+        if HideUIPanel then HideUIPanel(settingsPanel) else settingsPanel:Hide() end
     end
 end
 
 local function Register()
     if category then return end
-    if not (Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory) then
-        return
-    end
+    if not (Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory)
+        and not InterfaceOptions_AddCategory then return end
 
     local sign = CreateFrame("Frame")
     local title = ns.UI.Label(sign, "Social Diary", "GameFontHighlightLarge")
@@ -1132,8 +1133,14 @@ local function Register()
     end)
     sign.open:SetPoint("TOPLEFT", text, "BOTTOMLEFT", 0, -14)
 
-    category = Settings.RegisterCanvasLayoutCategory(sign, "Social Diary")
-    Settings.RegisterAddOnCategory(category)
+    if Settings and Settings.RegisterCanvasLayoutCategory then
+        category = Settings.RegisterCanvasLayoutCategory(sign, "Social Diary")
+        Settings.RegisterAddOnCategory(category)
+    else
+        sign.name = "Social Diary"
+        InterfaceOptions_AddCategory(sign)
+        category = sign
+    end
 end
 
 ns.On("PLAYER_LOGIN", Register)

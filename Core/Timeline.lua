@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The profile timeline (JNL-2) and its taxonomy (TLN-1 to TLN-10).
 --
 -- A busy evening leaves dozens of interaction rows, so the timeline is not a

@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- The timeline's words (JNL-2, TLN-2 to TLN-6, TLN-10): what each timeline item says
 -- on the profile's page, and in its tooltip.
 --

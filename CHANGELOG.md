@@ -5,6 +5,15 @@ All notable changes to Social Diary. Versions follow the `## Version` line in
 
 ## [Unreleased]
 
+### Changes
+
+- Social Diary now supports the original Wrath 3.3.5a client
+
+### Fixes
+
+- Number fields in _Settings_ now enable and disable correctly
+- The diary now loads correctly in the original Wrath client
+
 ## [1.5.0]
 
 ### Shiny new Things

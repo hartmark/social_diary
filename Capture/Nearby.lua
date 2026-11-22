@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- "Seen nearby": REU-5's reunion toast, and "last seen at ... in ...".
 --
 -- The unit tokens that can name another player without sightings existing

@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- World PvP kills: a player killed by the user or by their group
 -- (Core/Fights.lua). The other half, the user killed by a player, is
 -- Capture/Deaths.lua's.

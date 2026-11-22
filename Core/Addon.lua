@@ -1,3 +1,4 @@
+if SocialDiaryLegacyEnv then setfenv(1, SocialDiaryLegacyEnv) end
 -- Namespace bootstrap. Every file in the TOC receives this table as its
 -- second vararg, so nothing is exported into _G except what the TOC needs.
 

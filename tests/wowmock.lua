@@ -1082,13 +1082,19 @@ function M.LoadAddon(root)
             M.savedVariables[#M.savedVariables + 1] = name
         end
 
-        local file = line:match("^([%w_]+/[%w_/]+%.lua)%s*$")
+        local normalized = line:gsub("\\", "/")
+        local file = normalized:match("^([%w_]+/[%w_/]+%.lua)%s*$")
         if file then
             -- loadfile's own message names the line of a syntax error; a
             -- generic "cannot load" would hide it.
             local chunk, err = loadfile(root .. "/" .. file)
             assert(chunk, err)
             chunk("social_diary", ns)
+        end
+    end
+    if not SocialDiaryLegacyEnv then
+        for _, f in ipairs({ 'Art', 'Diagnostics', 'SightingsDebug', 'JourneyDebug', 'TestData' }) do
+            assert(loadfile(root .. '/Dev/' .. f .. '.lua'))('social_diary', ns)
         end
     end
     return ns
