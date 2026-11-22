@@ -51,7 +51,7 @@ end
 
 -- The areas' tiles onto `pieces`: the explored ones the client hands back,
 -- and with `all` every other one the map has. Returns how many areas.
-local function AddAreas(pieces, mapID, TW, TH, all)
+local function AddAreas(pieces, mapID, TW, TH, all, layer)
     local Explored = C_MapExplorationInfo and C_MapExplorationInfo.GetExploredMapTextures
     local seen, count = {}, 0
     for _, area in ipairs(Explored and Explored(mapID) or {}) do
@@ -62,7 +62,15 @@ local function AddAreas(pieces, mapID, TW, TH, all)
             count = count + 1
         end
     end
-    local data = all and ns.UI.MapOverlayData and ns.UI.MapOverlayData[mapID]
+    -- Native Wrath area IDs are a different namespace from retail uiMapIDs.
+    -- A numeric collision must never paint another client's explored areas
+    -- over the old map. The legacy layer carries the matching client table;
+    -- live explored areas above take precedence over that reveal fallback.
+    local data
+    if all then
+        if layer.legacyMap then data = layer.legacyOverlays
+        else data = ns.UI.MapOverlayData and ns.UI.MapOverlayData[mapID] end
+    end
     for _, area in ipairs(data or {}) do
         local AW, AH, x, y, files = area[1], area[2], area[3], area[4], area[5]
         if not seen[AW .. ":" .. AH .. ":" .. x .. ":" .. y] then
@@ -95,11 +103,12 @@ function MapArt.For(mapID, all)
             local file = textures[(row - 1) * cols + col]
             if file then
                 pieces[#pieces + 1] = { file = file, x = (col - 1) * TW, y = (row - 1) * TH,
-                    w = TW, h = TH, fw = TW, fh = TH }
+                    w = math.min(TW, layer.layerWidth - (col - 1) * TW),
+                    h = math.min(TH, layer.layerHeight - (row - 1) * TH), fw = TW, fh = TH }
             end
         end
     end
-    local areas = AddAreas(pieces, mapID, TW, TH, all)
+    local areas = AddAreas(pieces, mapID, TW, TH, all, layer)
     return layer, pieces, areas
 end
 

@@ -20,6 +20,15 @@ local function LegacyObject(f)
         absent.Enable, absent.Disable = true, true
     end
     for _, k in ipairs(modern) do f[k] = nil; absent[k] = true end
+    if f.frameType == 'Texture' then
+        absent.SetRotation = nil
+        -- Actual build12340 observed in-game: native SetRotation(0) discards
+        -- a previous crop and expands UVs beyond the texture's boundaries.
+        f.SetRotation = function(self)
+            self:SetTexCoord(-0.2071068, -0.2071068, -0.2071068, 1.2071068,
+                1.2071068, -0.2071068, 1.2071068, 1.2071068)
+        end
+    end
     local old = getmetatable(f)
     setmetatable(f, { __index = function(self, key)
         if absent[key] then return nil end
@@ -57,13 +66,35 @@ GetNumRaidMembers = function() return mock.inRaid and mock.groupSize or 0 end
 GetNumPartyMembers = function() return not mock.inRaid and math.max(mock.groupSize - 1, 0) or 0 end
 GetGuildInfo = function() end
 GetAddOnMetadata = function(_, key) return key == 'Version' and '1.5.0-wotlk.1' or 'Social Diary' end
-GetCurrentMapAreaID = function() return 14 end
-GetCurrentMapDungeonLevel = function() return 0 end
-SetMapToCurrentZone = function() end
-SetMapByID = function() end
-SetDungeonMapLevel = function() end
-GetPlayerMapPosition = function() return 0.4, 0.5 end
-GetMapInfo = function() return 'Durotar' end
+-- GetCurrentMapAreaID returns DBC ID + 1; SetMapByID takes the DBC ID.
+-- Original FrameXML WorldMapFrame_ToggleWindowSize explicitly subtracts one.
+local selectedMap, selectedFloor = 5, 2
+local currentMap, playerX, playerY = 25, 0.4, 0.5
+local folders = { [5] = 'Durotar', [25] = 'Hilsbrad', [16] = 'Alterac' }
+local mapChanges = 0
+GetCurrentMapAreaID = function() return selectedMap end
+GetCurrentMapDungeonLevel = function() return selectedFloor end
+GetCurrentMapContinent = function() return selectedMap == 5 and 2 or 1 end
+GetCurrentMapZone = function() return selectedMap == 25 and 2 or 1 end
+GetMapZones = function(continent)
+    if continent == 2 then return 'Durotar' end
+    return 'Alterac Mountains', 'Hillsbrad Foothills'
+end
+SetMapToCurrentZone = function() mapChanges = mapChanges + 1; selectedMap, selectedFloor = currentMap, 0 end
+SetMapByID = function(id) mapChanges = mapChanges + 1; selectedMap, selectedFloor = id + 1, 0 end
+SetDungeonMapLevel = function(floor) selectedFloor = floor end
+GetPlayerMapPosition = function()
+    if selectedMap == currentMap then return playerX, playerY end
+    return 0, 0
+end
+GetMapInfo = function() return folders[selectedMap] end
+GetMapOverlayInfo = function(index)
+    if selectedMap == 25 and index == 1 then
+        return 'Interface\\WorldMap\\Hilsbrad\\DARROWHILL', 205, 155, 414, 154
+    end
+end
+UnitPosition = nil
+WorldMapFrame = CreateFrame('Frame', 'WorldMapFrame', UIParent)
 GetAuctionItemClasses = function() return 'Weapon', 'Armor', 'Container' end
 GetAuctionItemSubClasses = function() return 'Miscellaneous' end
 GetContainerNumSlots = function() return 16 end
@@ -104,6 +135,15 @@ Minimap.GetCenter = function() return 100, 100 end
 GetCursorPosition = function() return 200, 100 end
 local ns = mock.LoadAddon('.')
 local E = assert(SocialDiaryLegacyEnv)
+local cropped = E.CreateFrame('Frame'):CreateTexture()
+cropped:SetTexCoord(0.2, 0.8, 0.1, 0.9)
+cropped:SetRotation(0)
+local nativeUV = cropped.recorded.calls.SetTexCoord
+assert(nativeUV.n == 4 and nativeUV[1] == 0.2 and nativeUV[2] == 0.8
+    and nativeUV[3] == 0.1 and nativeUV[4] == 0.9, 'native zero rotation corrupts map texture crop')
+local coldTextures = E.C_Map.GetMapArtLayerTextures(25, 1)
+assert(coldTextures and coldTextures[1] == 'Interface\\WorldMap\\Hilsbrad\\Hilsbrad1', 'historical map lookup must convert native read ID to setter ID')
+assert(selectedMap == 5 and selectedFloor == 2, 'cold map lookup changed selected map or floor')
 assert(E.C_QuestLog.GetTitleForQuestID(123) == 'A quiet errand', 'quest title lookup must use normalized legacy log fields')
 assert(E.IsResting() == true and E.IsInInstance() == false, 'old boolean values normalized')
 assert(_G.C_Timer == nil and E.C_Timer, 'compat API must stay addon-local')
@@ -126,6 +166,41 @@ SocialDiaryMinimapButton:GetScript('OnDragStop')(SocialDiaryMinimapButton)
 assert(ns.Setting('minimapAngle') == 0, 'old-client minimap drag saved')
 assert(not SocialDiaryMinimapButton:GetScript('OnUpdate'), 'old-client minimap drag stopped')
 assert(ns.ownGUID == own.guid, 'own old-format GUID')
+local function Near(a, b) return type(a) == 'number' and math.abs(a - b) < 0.001 end
+assert(E.C_Map.GetBestMapForUnit('player') == 25, 'runtime map ID must not be replaced with DBC row ID')
+assert(selectedMap == 5 and selectedFloor == 2, 'map snapshot changed the selected map or floor')
+assert(E.C_Map.GetMapInfo(25).name == 'Hillsbrad Foothills', 'map label uses native localized zone name')
+local width, height = E.C_Map.GetMapWorldSize(25)
+assert(Near(width, 3200) and Near(height, 2133.333252), 'map physical dimensions')
+local nativeLayer = E.C_Map.GetMapArtLayers(25)[1]
+assert(nativeLayer.legacyMap and nativeLayer.layerWidth == 1002 and #nativeLayer.legacyOverlays > 0, 'native map art and reveal metadata missing')
+local textures = E.C_Map.GetMapArtLayerTextures(25, 1)
+assert(#textures == 12 and textures[1] == 'Interface\\WorldMap\\Hilsbrad\\Hilsbrad1', 'native texture paths')
+local explored = E.C_MapExplorationInfo.GetExploredMapTextures(25)
+assert(#explored == 1 and explored[1].fileDataIDs[1] == 'Interface\\WorldMap\\Hilsbrad\\DARROWHILL1', 'native explored overlay paths')
+assert(selectedMap == 5 and selectedFloor == 2, 'overlay read changed selected map/floor')
+local north, east, _, instance = E.UnitPosition('player')
+assert(Near(north, -666.666626) and Near(east, -213.3333252) and instance == 0, 'derived native world position')
+assert(_G.UnitPosition == nil, 'world-position adapter must not change other addons')
+local worldID, world = E.C_Map.GetWorldPosFromMapPos(25, E.CreateVector2D(0.4, 0.5))
+local _, projected = E.C_Map.GetMapPosFromWorldPos(worldID, world, 25)
+local px, py = projected:GetXY()
+assert(Near(px, 0.4) and Near(py, 0.5), 'zone/world projection round trip')
+assert(not E.C_Map.GetMapPosFromWorldPos(1, world, 25), 'cross-instance projection invented coordinates')
+local sample = ns.JourneyCapture.Sample(mock.now)
+assert(sample and sample.mapID == 25 and Near(sample.wx, east) and Near(sample.wy, north), 'route capture requires derived world coordinates')
+local beforeChanges = mapChanges
+WorldMapFrame:Show()
+assert(not E.C_Map.GetBestMapForUnit('player'), 'open world map must pause position capture')
+assert(#E.C_MapExplorationInfo.GetExploredMapTextures(25) == 0, 'open world map should not switch to another zone')
+assert(mapChanges == beforeChanges and selectedMap == 5 and selectedFloor == 2, 'open world map selection changed')
+WorldMapFrame:Hide()
+local nativeOverlay = GetMapOverlayInfo
+GetMapOverlayInfo = function() error('native overlay read failed') end
+assert(not pcall(E.C_MapExplorationInfo.GetExploredMapTextures, 25), 'native map read failure was swallowed')
+assert(selectedMap == 5 and selectedFloor == 2, 'failed map read did not restore selection')
+GetMapOverlayInfo = nativeOverlay
+assert(#E.C_MapExplorationInfo.GetExploredMapTextures(25) == 1, 'failed map read left adapter locked')
 local handle = E.C_Timer.NewTicker(1, function() end)
 assert(not handle:IsCancelled()); handle:Cancel(); assert(handle:IsCancelled())
 local calls = 0

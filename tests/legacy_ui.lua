@@ -20,7 +20,18 @@ local function NativeFrame(kind, name, parent, template)
     assert(template ~= "BackdropTemplate", "old client has no BackdropTemplate")
     local f = NativeRegion()
     f.kind, f.name, f.template = kind, name, template
-    function f:CreateTexture() return NativeRegion() end
+    function f:CreateTexture()
+        local texture = NativeRegion()
+        if template == "OldNativeRotation" then
+            -- Captured original-client behaviour: even zero destroys crop.
+            texture.SetRotation = function(self)
+                self.coords = { -0.2071068, -0.2071068, -0.2071068, 1.2071068,
+                    1.2071068, -0.2071068, 1.2071068, 1.2071068 }
+                self.nativeRotationCalled = true
+            end
+        end
+        return texture
+    end
     function f:CreateFontString() return NativeRegion() end
     function f:HasScript(script) return script ~= "OnHyperlinkClick" end
     function f:SetScript(script, handler) assert(self:HasScript(script)) self[script] = handler end
@@ -85,7 +96,24 @@ local rotated = t.coords[1]
 t:SetRotation(math.pi / 4)
 assert(t.coords[1] == rotated, "rotation must not compound")
 t:SetRotation(0)
-assert(t.coords[1] == 0.2 and t.coords[8] == 0.9)
+assert(#t.coords == 4 and t.coords[1] == 0.2 and t.coords[4] == 0.9)
+local nativeRotation = env.CreateFrame("Frame", nil, nil, "OldNativeRotation"):CreateTexture()
+nativeRotation:SetTexCoord(0.2, 0.8, 0.1, 0.9)
+nativeRotation:SetRotation(0)
+assert(not nativeRotation.nativeRotationCalled, "native SetRotation must never destroy the crop")
+assert(#nativeRotation.coords == 4 and nativeRotation.coords[1] == 0.2 and nativeRotation.coords[4] == 0.9,
+    "zero rotation must preserve native rectangular crop arguments")
+nativeRotation:SetTexCoord(0.7, 0.8, 0.2, 0.3)
+nativeRotation:SetRotation(math.pi / 4)
+for i = 1, 8, 2 do
+    assert(math.abs(nativeRotation.coords[i] - 0.75) < 0.071,
+        "rotated crop moved towards the whole file's centre")
+    assert(math.abs(nativeRotation.coords[i + 1] - 0.25) < 0.071,
+        "rotated crop moved towards the whole file's centre")
+end
+nativeRotation:SetRotation(0)
+assert(#nativeRotation.coords == 4 and nativeRotation.coords[1] == 0.7 and nativeRotation.coords[4] == 0.3,
+    "returning to zero must restore the original crop")
 local text = f:CreateFontString()
 assert(text:GetUnboundedStringWidth() == 120 and text.width == 80)
 text:SetMaxLines(3) assert(text.height == 42)

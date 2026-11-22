@@ -1300,6 +1300,32 @@ do
     mark.scripts.OnMouseUp(mark, "LeftButton")
     Eq(page.mode, "plates", "a click on a mark of the full page did not go back")
     ns.UI.OpenZoneSheet(1412)
+    -- A full-map plate can be reused for ordinary plates without being
+    -- hidden. Its pending settle must not survive that change of purpose.
+    local oldSettle = plate.look.onSettle
+    plate:Wheel(1, 0, 0)
+    pivot.scripts.OnUpdate(pivot, FZ.time / 2)
+    clip.scripts.OnMouseDown(clip, "LeftButton")
+    clip.scripts.OnMouseUp(clip, "LeftButton")
+    Eq(page.mode, "plates", "leaving a moving full map did not open the plates")
+    Eq(plate.look, nil, "a reused plate kept the full-map view")
+    Eq(pivot.scripts.OnUpdate, nil, "a reused plate kept the full-map settle timer")
+    local plateMap = plate.mapID
+    oldSettle(f0 * FZ.step, 0.5, 0.5)
+    Eq(page.mode, "plates", "a stale settle reopened the full map")
+    Eq(plate.mapID, plateMap, "a stale settle redrew a reused plate")
+    ns.UI.OpenZoneSheet(1412)
+    local reopened = plate.look
+    oldSettle(f0 * FZ.step, 0.5, 0.5)
+    Eq(plate.look, reopened, "a stale settle replaced a reopened view of the same map")
+    local otherSettle = reopened.onSettle
+    ns.UI.OpenZoneSheet(1413)
+    local other = plate.look
+    otherSettle(f0 * FZ.step, 0.5, 0.5)
+    Eq(page.fullMap, 1413, "a stale settle changed the selected map")
+    Eq(plate.look, other, "a stale settle redrew another map")
+    Open(10)
+    ns.UI.OpenZoneSheet(1412)
     plate.CursorScreen = function() return 0, 0 end
 end
 

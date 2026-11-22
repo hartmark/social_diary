@@ -33,29 +33,39 @@ local function Texture(texture)
             if gradient then return gradient(self, orientation, from, to, ...) end
         end
     end
-    if not texture.SetRotation then
-        -- Rotate the texture's UV corners; 3.3.5 has no geometric rotation.
-        -- Save the unrotated crop so repeated repaints never compound it.
-        local nativeCoord = texture.SetTexCoord
-        local coords = { 0, 0, 0, 1, 1, 0, 1, 1 }
-        local angle = 0
-        local function Apply(self)
-            if angle == 0 then nativeCoord(self, unpack(coords)) return end
-            local c, s, out = math.cos(angle), math.sin(angle), {}
-            for i = 1, 8, 2 do
-                local x, y = coords[i] - 0.5, coords[i + 1] - 0.5
-                out[i], out[i + 1] = 0.5 + x * c - y * s, 0.5 + x * s + y * c
-            end
-            nativeCoord(self, unpack(out))
+    -- Original Wrath's native SetRotation replaces a texture's UV crop,
+    -- even at zero: the 23 Nov 2026 client probe expanded .2..8/.1..9 to
+    -- roughly -.207..1.207. Map facets call SetRotation(0) after cropping,
+    -- so invoking it stretches clamped edge pixels across the whole map.
+    -- Own this operation for addon textures, including when a native method
+    -- exists. Zero keeps the original four/eight arguments verbatim; icons
+    -- that do turn use their crop's centre, never the full file's centre.
+    local nativeCoord = texture.SetTexCoord
+    local coords = { 0, 1, 0, 1 }
+    local angle = 0
+    local function Apply(self)
+        if angle == 0 then return nativeCoord(self, unpack(coords)) end
+        local corners = coords
+        if #coords == 4 then
+            corners = { coords[1], coords[3], coords[1], coords[4],
+                coords[2], coords[3], coords[2], coords[4] }
         end
-        texture.SetTexCoord = function(self, ...)
-            local args = { ... }
-            if #args == 4 then
-                coords = { args[1], args[3], args[1], args[4], args[2], args[3], args[2], args[4] }
-            else coords = args end
-            Apply(self)
+        local cx, cy = 0, 0
+        for i = 1, 8, 2 do cx, cy = cx + corners[i] / 4, cy + corners[i + 1] / 4 end
+        local c, s, out = math.cos(angle), math.sin(angle), {}
+        for i = 1, 8, 2 do
+            local x, y = corners[i] - cx, corners[i + 1] - cy
+            out[i], out[i + 1] = cx + x * c - y * s, cy + x * s + y * c
         end
-        texture.SetRotation = function(self, radians) angle = radians or 0 Apply(self) end
+        return nativeCoord(self, unpack(out))
+    end
+    texture.SetTexCoord = function(self, ...)
+        coords = { ... }
+        return Apply(self)
+    end
+    texture.SetRotation = function(self, radians)
+        angle = radians or 0
+        return Apply(self)
     end
     return texture
 end

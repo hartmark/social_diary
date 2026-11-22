@@ -19,17 +19,25 @@ remembered for each character.
 
 Private compatibility adapters handle original player IDs, group events,
 timers, combat-log kills/deaths, quest rewards, tooltips and rendering.
+Outdoor maps use your client's own tiles and overlays, with explored areas
+and full-zone reveal. Native map metadata also supplies world coordinates
+for new journey routes. Previously unrecorded routes cannot be recovered.
+Map images are read from the client and are not redistributed.
 
 Limits: nearby players are observed through target/focus/mouseover/group;
-modern nameplate unit tokens, retail map art/overlays, damage meter and
-death recap are unavailable. Some paper effects are simplified.
+modern nameplate unit tokens, damage meter and death recap are unavailable.
+Outdoor zone maps are supported; dungeon/floor maps are not, and position
+sampling skips instances. Some paper effects are simplified.
 Coordinates are skipped while the world map is open to preserve its view.
 Upstream v4 features are not included. Do not update to a Forever build.
 
-Validation: 6,519 upstream mock checks and separate old-client API/UI tests
+Validation: 6,578 mock checks and separate old-client API/UI tests
 pass. Opening /sd has been reported working in the actual 3.3.5 client;
 capture and the full interface still need broader in-game verification.
-The minimap button has not yet been verified in the game.
+The minimap button and map appearance still need in-game confirmation.
+All 36 required Hillsbrad texture files were verified in the client archives.
+Map tests cover world coordinates, projection, selection/floor restoration,
+open-map behaviour and map ID separation.
 Run: luajit tests/run.lua; luajit tests/legacy.lua; luajit tests/legacy_ui.lua.
 
 Original Social Diary: https://github.com/social-diary/social_diary

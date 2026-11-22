@@ -1694,6 +1694,7 @@ end
 -- fitted view (the zone's whole height, centred on the road). Looked at
 -- closer, the window is drawn with room round it to pan.
 local function DrawFullPlate(e, view)
+    local drawnPage = page
     local mapID = page.fullMap
     local plate = PlateAt(1)
     plate:SetSlot(FULL)
@@ -1711,11 +1712,17 @@ local function DrawFullPlate(e, view)
         box = box, deaths = ns.Journey.Deaths(ns.Journey.For(ns.ownGUID)) })
     plate.share, plate.plan = 1, nil
     plate:SetClick(Back, false)
+    local function Settled(nf, ncx, ncy)
+        -- A plate is pooled: leaving a full map can reuse it without a
+        -- hide. A delayed settle belongs only to the view that queued it,
+        -- not to a newly opened level, map, or another visit to this map.
+        if page ~= drawnPage or page.mode ~= "full" or page.fullMap ~= mapID then return end
+        if not page.recap or page.recap.entries[page.open] ~= e then return end
+        if not plate.look or plate.look.onSettle ~= Settled then return end
+        DrawFullPlate(e, { f = nf, cx = ncx, cy = ncy, redraws = plate.look.redraws })
+    end
     plate:Look({ f = f, cx = cx, cy = cy, fit = f0, c0 = c0, LW = LW, LH = LH,
-        redraws = view and view.redraws,
-        onSettle = function(nf, ncx, ncy)
-            DrawFullPlate(e, { f = nf, cx = ncx, cy = ncy, redraws = plate.look and plate.look.redraws })
-        end })
+        redraws = view and view.redraws, onSettle = Settled })
     plate:Show()
     return plate, sheet
 end
@@ -1796,6 +1803,9 @@ end
 -- The right page for the open entry: its plates, or one zone's full page.
 -- Drawn as it opens or turns, from pools; never per frame.
 local function DrawRight()
+    -- Cancel full-map input and settling before reusing any pooled plate.
+    -- OnHide cannot do this when the same frame stays on the page.
+    for _, plate in ipairs(page.plates) do plate:Look(nil) end
     local recap = page.recap
     local e = recap and recap.entries[page.open]
     for _, pool in ipairs(page.rightPools) do pool:Begin() end

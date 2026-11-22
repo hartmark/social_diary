@@ -7,6 +7,7 @@ All notable changes to Social Diary. Versions follow the `## Version` line in
 
 ### Shiny new Things
 
+- Outdoor maps in _Your Diary_ use the original Wrath artwork
 - A movable minimap button opens the journal and _Settings_
 
 ### Changes
@@ -15,6 +16,10 @@ All notable changes to Social Diary. Versions follow the `## Version` line in
 
 ### Fixes
 
+- Maps in _Your Diary_ no longer show stretched bands
+- Returning from a zoomed map no longer interrupts the diary
+- Saved places in _Your Diary_ now use the correct maps
+- _Your Diary_ now draws newly recorded outdoor journeys correctly
 - Completed quests are now recorded correctly in original Wrath
 - Number fields in _Settings_ now enable and disable correctly
 - The diary now loads correctly in the original Wrath client
