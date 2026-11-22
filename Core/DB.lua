@@ -89,6 +89,7 @@ local ACCOUNT_SETTINGS = {
 }
 
 local CHARACTER_SETTINGS = {
+    minimapAngle = 220, -- Position of this character's journal button.
     storeChat = true,   -- INT-3: chat storage can be switched off
     chatLines = 50,     -- INT-3: lines of chat kept per character...
     chatUnlimited = false,  -- ...or every line

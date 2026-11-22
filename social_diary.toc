@@ -76,6 +76,7 @@ UI\Tooltip.lua
 UI\Settings.lua
 UI\Intro.lua
 UI\SocialTab.lua
+UI\Minimap.lua
 
 Capture\Trade.lua
 Capture\Whisper.lua

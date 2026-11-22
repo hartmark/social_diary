@@ -28,6 +28,7 @@ local FILES = {
     "combat",
     "questie",
     "journal_ui",
+    "minimap",
     "journey_ui",
     "killer_card",
     "combat_ui",

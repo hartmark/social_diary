@@ -31,6 +31,9 @@ original 3.3.5 client.
 - `/sd add` adds your current target to the diary.
 - `/sd settings` opens its settings.
 - The **Social Diary** tab on the Friends window opens the journal too.
+- Left-click the book button beside the minimap to open or close the journal.
+  Right-click it to open settings. Drag it around the minimap to move it;
+  its position is remembered for each character.
 
 People you cross paths with are pencilled in automatically. Those who never
 become part of your diary are rubbed out after 30 days by default. Adding
@@ -54,7 +57,7 @@ settings and journal rendering. These API adapters are private to Social Diary.
 
 ## Validation
 
-The upstream mock suite passes **6,495 checks**. Separate old-client tests cover
+The upstream mock suite passes **6,519 checks**. Separate old-client tests cover
 loading, player IDs, timers, groups, quest rewards, combat-log payloads and
 opening the journal. Rendering adapter tests pass too:
 
@@ -66,7 +69,8 @@ luajit tests/legacy_ui.lua
 
 Opening the diary with `/sd` has also been reported working in the actual
 3.3.5 client after the TOC path correction. Capture and the full interface
-have not yet been comprehensively verified in the game.
+have not yet been comprehensively verified in the game. The minimap button
+has not yet been verified in the game.
 
 ## Credits and licence
 

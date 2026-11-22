@@ -79,6 +79,12 @@ GameTooltip = CreateFrame('GameTooltip', 'GameTooltip', UIParent)
 GameTooltip.HookScript = function() end
 IsResting = function() return 1 end
 IsInInstance = function() return nil, 'none' end
+Minimap = CreateFrame('Frame', 'Minimap', UIParent)
+Minimap.GetWidth = function() return 140 end
+Minimap.GetHeight = function() return 140 end
+Minimap.GetEffectiveScale = function() return 1 end
+Minimap.GetCenter = function() return 100, 100 end
+GetCursorPosition = function() return 200, 100 end
 local ns = mock.LoadAddon('.')
 local E = assert(SocialDiaryLegacyEnv)
 assert(E.IsResting() == true and E.IsInInstance() == false, 'old boolean values normalized')
@@ -96,6 +102,11 @@ mock.fire('ADDON_LOADED', 'social_diary')
 ns.db.settings.frontRead = true
 mock.fire('PLAYER_LOGIN')
 mock.fire('PLAYER_ENTERING_WORLD')
+assert(SocialDiaryMinimapButton and SocialDiaryMinimapButton:IsShown(), 'old-client minimap button loaded')
+SocialDiaryMinimapButton:GetScript('OnDragStart')(SocialDiaryMinimapButton)
+SocialDiaryMinimapButton:GetScript('OnDragStop')(SocialDiaryMinimapButton)
+assert(ns.Setting('minimapAngle') == 0, 'old-client minimap drag saved')
+assert(not SocialDiaryMinimapButton:GetScript('OnUpdate'), 'old-client minimap drag stopped')
 assert(ns.ownGUID == own.guid, 'own old-format GUID')
 local handle = E.C_Timer.NewTicker(1, function() end)
 assert(not handle:IsCancelled()); handle:Cancel(); assert(handle:IsCancelled())

@@ -5,6 +5,10 @@ All notable changes to Social Diary. Versions follow the `## Version` line in
 
 ## [Unreleased]
 
+### Shiny new Things
+
+- A movable minimap button opens the journal and _Settings_
+
 ### Changes
 
 - Social Diary now supports the original Wrath 3.3.5a client
