@@ -15,6 +15,7 @@ All notable changes to Social Diary. Versions follow the `## Version` line in
 
 ### Fixes
 
+- Completed quests are now recorded correctly in original Wrath
 - Number fields in _Settings_ now enable and disable correctly
 - The diary now loads correctly in the original Wrath client
 

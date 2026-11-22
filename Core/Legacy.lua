@@ -122,10 +122,20 @@ API('C_Map', Map)
 -- No nameplate unit tokens, retail atlas textures, damage meter or death
 -- recap exist in this client. Capability guards leave those features absent.
 API('C_Texture', {})
+-- The original log puts group size before the header flag and exposes the
+-- quest ID through its hyperlink. Normalize the private log reader to the
+-- shape expected by the addon's fallback readers; a daily flag is not an ID.
+local nativeQuestLogTitle = GetQuestLogTitle
+API('GetQuestLogTitle', function(index)
+    local title, level, tag, _, header, collapsed, complete, daily = nativeQuestLogTitle(index)
+    local link = not header and GetQuestLink(index)
+    local id = type(link) == 'string' and tonumber(link:match('quest:(%d+)')) or nil
+    return title, level, tag, header, collapsed, complete, daily, id
+end)
 local Q = {}
 function Q.GetTitleForQuestID(id)
     for i = 1, GetNumQuestLogEntries() do
-        local title, _, _, header, _, _, _, qid = GetQuestLogTitle(i)
+        local title, _, _, header, _, _, _, qid = E.GetQuestLogTitle(i)
         if not header and qid == id then return title end
     end
 end

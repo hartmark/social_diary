@@ -218,9 +218,27 @@ if SocialDiaryLegacyEnv then
     local questID
     local questFrame = CreateFrame("Frame")
     questFrame:RegisterEvent("QUEST_COMPLETE")
-    questFrame:SetScript("OnEvent", function() questID = GetQuestID() end)
+    questFrame:RegisterEvent("QUEST_FINISHED")
+    questFrame:RegisterEvent("QUEST_DETAIL")
+    questFrame:SetScript("OnEvent", function(_, event)
+        questID = nil
+        if event ~= "QUEST_COMPLETE" then return end
+        -- The selected log row may belong to an entirely different quest.
+        -- Match the reward window's title and refuse ambiguous matches.
+        local rewardTitle = GetTitleText()
+        if type(rewardTitle) ~= "string" or rewardTitle == "" then return end
+        for index = 1, GetNumQuestLogEntries() do
+            local title, _, _, header, _, _, _, id = GetQuestLogTitle(index)
+            if not header and title == rewardTitle and id then
+                if questID and questID ~= id then questID = nil; return end
+                questID = id
+            end
+        end
+    end)
     hooksecurefunc("GetQuestReward", function()
-        if questID and questID > 0 then Dispatch("QUEST_TURNED_IN", questID); questID = nil end
+        local completed = questID
+        questID = nil
+        if completed and completed > 0 then Dispatch("QUEST_TURNED_IN", completed) end
     end)
 end
 

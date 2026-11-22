@@ -73,7 +73,24 @@ InterfaceOptions_AddCategory = function() end
 EasyMenu = function() end
 local rewardHook
 hooksecurefunc = function(name, fn) if name == 'GetQuestReward' then rewardHook = fn end end
-GetQuestID = function() return 123 end
+GetQuestID = nil -- This API does not exist in the original client.
+local questTitle = 'A quiet errand'
+local questLog = {
+    { title = 'The valley', header = true },
+    { title = 'Another errand', id = 456 },
+    { title = 'A quiet errand', id = 123, daily = 1 },
+}
+GetTitleText = function() return questTitle end
+GetNumQuestLogEntries = function() return #questLog, #questLog - 1 end
+GetQuestLogTitle = function(index)
+    local q = questLog[index]
+    if q then return q.title, 20, nil, 0, q.header, false, 1, q.daily end
+end
+GetQuestLink = function(index)
+    local q = questLog[index]
+    if q and q.id then return '|cffffff00|Hquest:' .. q.id .. ':20|h[' .. q.title .. ']|h|r' end
+end
+GetQuestLogSelection = function() return 2 end -- Deliberately not the turned-in quest.
 -- Old mock doesn't normally model HookScript on GameTooltip.
 GameTooltip = CreateFrame('GameTooltip', 'GameTooltip', UIParent)
 GameTooltip.HookScript = function() end
@@ -87,6 +104,7 @@ Minimap.GetCenter = function() return 100, 100 end
 GetCursorPosition = function() return 200, 100 end
 local ns = mock.LoadAddon('.')
 local E = assert(SocialDiaryLegacyEnv)
+assert(E.C_QuestLog.GetTitleForQuestID(123) == 'A quiet errand', 'quest title lookup must use normalized legacy log fields')
 assert(E.IsResting() == true and E.IsInInstance() == false, 'old boolean values normalized')
 assert(_G.C_Timer == nil and E.C_Timer, 'compat API must stay addon-local')
 assert(ns.SafeGUID('0x00000000000000A1'))
@@ -122,7 +140,19 @@ assert(ns.Characters.Get(other.guid), 'party player observed')
 local quests = 0
 ns.On('QUEST_TURNED_IN', function(_, id) assert(id == 123); quests = quests + 1 end)
 mock.fire('QUEST_COMPLETE'); rewardHook(); rewardHook()
-assert(quests == 1, 'quest reward captured once')
+assert(quests == 1, 'quest reward captured once, without GetQuestID or relying on log selection')
+mock.fire('QUEST_COMPLETE'); mock.fire('QUEST_FINISHED'); rewardHook()
+assert(quests == 1, 'closed reward window kept a stale quest')
+questTitle = 'Not in the log'
+mock.fire('QUEST_COMPLETE'); rewardHook()
+assert(quests == 1, 'unmatched title recorded the selected quest')
+questTitle = 'A quiet errand'
+questLog[#questLog + 1] = { title = questTitle, id = 789 }
+mock.fire('QUEST_COMPLETE'); rewardHook()
+assert(quests == 1, 'ambiguous title recorded an arbitrary quest')
+table.remove(questLog)
+mock.fire('QUEST_COMPLETE'); rewardHook()
+assert(quests == 2, 'valid reward was not recorded after ambiguous title')
 mock.SetUnit('party1', nil); mock.groupSize = 0
 mock.fire('PARTY_MEMBERS_CHANGED')
 assert(not ns.Roster.Has(other.guid), 'legacy party leave')
